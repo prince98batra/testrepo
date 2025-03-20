@@ -90,16 +90,16 @@ sleep 60
 
 echo "Fetching Bastion Host IP..."
 BASTION_IP=$(terraform output -raw bastion_ip)
-echo "Bastion IP: $BASTION_IP"  # Debugging step to verify the fetched Bastion IP
+echo "Bastion IP: $BASTION_IP"
 
 echo "Fetching Private IP of Prometheus Instance..."
-PRIVATE_IP=$(ansible-inventory -i aws_ec2.yml --list | jq -r '.["_meta"]["hostvars"] | to_entries[] | select(.value.ansible_host != null) | .value.ansible_host')
-echo "Prometheus Private IP: $PRIVATE_IP"  # Debugging step to verify the private IP
+PRIVATE_IP=$(terraform output -raw prometheus_private_ip)
+echo "Private IP: $PRIVATE_IP"
 
 echo "Running Ansible Playbook..."
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i aws_ec2.yml playbook.yml \
---private-key=$SSH_KEY -u ubuntu --extra-vars 'smtp_auth_password="${SMTP_PASS}"' \
--e "ansible_ssh_common_args='-o ProxyCommand=\"ssh -i $SSH_KEY -o StrictHostKeyChecking=no -W %h:%p ubuntu@$BASTION_IP\"'"
+  --private-key=$SSH_KEY -u ubuntu --extra-vars "ansible_ssh_common_args='-o ProxyCommand=\"ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY -W %h:%p ubuntu@$BASTION_IP\"' smtp_auth_password=\"${SMTP_PASS}\""
+
 
     '''
 }
