@@ -1,7 +1,7 @@
 resource "aws_security_group" "bastion" {
   vpc_id = var.vpc_id
 
-  # Allow SSH from anywhere (Restrict this in production)
+  # Allow SSH from anywhere (for Bastion access)
   ingress {
     from_port   = 22
     to_port     = 22
@@ -9,7 +9,7 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow Prometheus (9090) access to Bastion
+  # Allow access to Prometheus UI (9090), Alertmanager (9093), and Node Exporter (9100) from anywhere
   ingress {
     from_port   = 9090
     to_port     = 9090
@@ -17,7 +17,6 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow Alertmanager (9093) access to Bastion
   ingress {
     from_port   = 9093
     to_port     = 9093
@@ -25,7 +24,6 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow Node Exporter (9100) access to Bastion
   ingress {
     from_port   = 9100
     to_port     = 9100
@@ -33,7 +31,6 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -47,39 +44,38 @@ resource "aws_security_group" "bastion" {
 resource "aws_security_group" "prometheus" {
   vpc_id = var.vpc_id
 
-  # Allow SSH from Bastion Host ONLY
+  # Allow SSH from Bastion Host Only
   ingress {
-    from_port                = 22
-    to_port                  = 22
-    protocol                 = "tcp"
-    source_security_group_id = aws_security_group.bastion.id
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion.id]
   }
 
-  # Allow Prometheus (9090) from Bastion
+  # Allow Prometheus UI access from Bastion
   ingress {
-    from_port                = 9090
-    to_port                  = 9090
-    protocol                 = "tcp"
-    source_security_group_id = aws_security_group.bastion.id
+    from_port       = 9090
+    to_port         = 9090
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion.id]
   }
 
-  # Allow Alertmanager (9093) from Bastion
+  # Allow Alertmanager access from Bastion
   ingress {
-    from_port                = 9093
-    to_port                  = 9093
-    protocol                 = "tcp"
-    source_security_group_id = aws_security_group.bastion.id
+    from_port       = 9093
+    to_port         = 9093
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion.id]
   }
 
-  # Allow Node Exporter (9100) from Bastion
+  # Allow Node Exporter access from Bastion
   ingress {
-    from_port                = 9100
-    to_port                  = 9100
-    protocol                 = "tcp"
-    source_security_group_id = aws_security_group.bastion.id
+    from_port       = 9100
+    to_port         = 9100
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion.id]
   }
 
-  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
