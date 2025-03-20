@@ -70,66 +70,66 @@ pipeline {
             }
         }
 
-        sstage('Run Ansible Playbook') {
-    when {
-        expression { return env.ACTION == 'Apply' }
-    }
-    steps {
-        echo "Running Ansible Playbook after applying the changes."
-        withAWS(credentials: 'aws-creds', region: 'us-east-1') {
-            withCredentials([
-                sshUserPrivateKey(credentialsId: 'ssh-key-prometheus', keyFileVariable: 'SSH_KEY'),
-                string(credentialsId: 'SMTP_PASSWORD', variable: 'SMTP_PASS')
-            ]) {
-                dir('prometheus-terraform') {
-                    script {
-                        def bastionIp = sh(script: "terraform output -raw bastion_ip || echo ''", returnStdout: true).trim()
-                        
-                        if (!bastionIp) {
-                            error("❌ Bastion Host IP could not be fetched. Check Terraform outputs.")
+        stage('Run Ansible Playbook') {  // ✅ FIXED TYPO HERE
+            when {
+                expression { return env.ACTION == 'Apply' }
+            }
+            steps {
+                echo "Running Ansible Playbook after applying the changes."
+                withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    withCredentials([
+                        sshUserPrivateKey(credentialsId: 'ssh-key-prometheus', keyFileVariable: 'SSH_KEY'),
+                        string(credentialsId: 'SMTP_PASSWORD', variable: 'SMTP_PASS')
+                    ]) {
+                        dir('prometheus-terraform') {
+                            script {
+                                def bastionIp = sh(script: "terraform output -raw bastion_ip || echo ''", returnStdout: true).trim()
+                                
+                                if (!bastionIp) {
+                                    error("❌ Bastion Host IP could not be fetched. Check Terraform outputs.")
+                                }
+
+                                echo "✅ Bastion Host IP: ${bastionIp}"
+
+                                // Save SSH private key securely
+                                sh '''
+                                mkdir -p ~/.ssh
+                                echo "$SSH_KEY" > ~/.ssh/jenkins_key.pem
+                                chmod 600 ~/.ssh/jenkins_key.pem
+                                '''
+
+                                // Save bastion IP for use in inventory
+                                writeFile file: '../prometheus-roles/bastion_ip.txt', text: bastionIp
+                            }
                         }
 
-                        echo "✅ Bastion Host IP: ${bastionIp}"
+                        dir('prometheus-roles') {
+                            script {
+                                echo "🚀 Executing Ansible Playbook with Dynamic Inventory..."
 
-                        // Save SSH private key securely
-                        sh '''
-                        mkdir -p ~/.ssh
-                        echo "$SSH_KEY" > ~/.ssh/jenkins_key.pem
-                        chmod 600 ~/.ssh/jenkins_key.pem
-                        '''
+                                // Verify bastion_ip.txt exists
+                                def bastionIpFile = sh(script: "cat bastion_ip.txt 2>/dev/null || echo ''", returnStdout: true).trim()
 
-                        // Save bastion IP for use in inventory
-                        writeFile file: '../prometheus-roles/bastion_ip.txt', text: bastionIp
-                    }
-                }
+                                if (!bastionIpFile) {
+                                    error("❌ Bastion Host IP file is empty or missing. Ensure Terraform output is correct.")
+                                }
 
-                dir('prometheus-roles') {
-                    script {
-                        echo "🚀 Executing Ansible Playbook with Dynamic Inventory..."
+                                echo "🔗 Bastion IP: ${bastionIpFile}"
 
-                        // Verify bastion_ip.txt exists
-                        def bastionIpFile = sh(script: "cat bastion_ip.txt 2>/dev/null || echo ''", returnStdout: true).trim()
+                                sh """
+                                export ANSIBLE_HOST_KEY_CHECKING=False
+                                export BASTION_IP=${bastionIpFile}
 
-                        if (!bastionIpFile) {
-                            error("❌ Bastion Host IP file is empty or missing. Ensure Terraform output is correct.")
+                                ansible-playbook -i aws_ec2.yml playbook.yml \
+                                --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
+                                --extra-vars 'smtp_auth_password=${SMTP_PASS}'
+                                """
+                            }
                         }
-
-                        echo "🔗 Bastion IP: ${bastionIpFile}"
-
-                        sh """
-                        export ANSIBLE_HOST_KEY_CHECKING=False
-                        export BASTION_IP=${bastionIpFile}
-
-                        ansible-playbook -i aws_ec2.yml playbook.yml \
-                        --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
-                        --extra-vars 'smtp_auth_password=${SMTP_PASS}'
-                        """
                     }
                 }
             }
         }
-    }
-}
 
         stage('Terraform Destroy') {
             when {
