@@ -116,14 +116,16 @@ pipeline {
 
                         echo "🔗 Bastion IP: ${bastionIpFile}"
 
-                        sh """
-                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        withEnv(["SMTP_AUTH_PASSWORD=${SMTP_PASS}"]) {  // Mask SMTP password
+                            sh """
+                            export ANSIBLE_HOST_KEY_CHECKING=False
 
-                        ansible-playbook -i aws_ec2.yml playbook.yml \\
-                        --private-key=~/.ssh/jenkins_key.pem -u ubuntu \\
-                        --extra-vars "smtp_auth_password=${SMTP_PASS}" \\
-                        -e "ansible_ssh_common_args='-o ProxyCommand=\\\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@${bastionIpFile}\\\"'"
-                        """
+                            ansible-playbook -i aws_ec2.yml playbook.yml \\
+                            --private-key=~/.ssh/jenkins_key.pem -u ubuntu \\
+                            --extra-vars 'smtp_auth_password=\"${SMTP_AUTH_PASSWORD}\"' \\
+                            -e 'ansible_ssh_common_args=\"-o ProxyCommand=\\\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@${bastionIpFile}\\\"\"'
+                            """
+                        }
                     }
                 }
             }
