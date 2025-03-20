@@ -116,14 +116,15 @@ pipeline {
 
                                 echo "🔗 Bastion IP: ${bastionIpFile}"
 
-                                sh """
-                                export ANSIBLE_HOST_KEY_CHECKING=False
-                                export BASTION_IP=${bastionIpFile}
+                               sh """
+export ANSIBLE_HOST_KEY_CHECKING=False
+export BASTION_IP=${bastionIpFile}
 
-                                ansible-playbook -i aws_ec2.yml playbook.yml \
-                                --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
-                                --extra-vars 'smtp_auth_password=${SMTP_PASS}'
-                                """
+ansible-playbook -i aws_ec2.yml playbook.yml \
+--private-key=~/.ssh/jenkins_key.pem -u ubuntu \
+--extra-vars \"smtp_auth_password='${SMTP_PASS}'\"
+"""
+
                             }
                         }
                     }
