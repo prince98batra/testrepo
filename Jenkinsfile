@@ -73,40 +73,44 @@ pipeline {
         }
 
         stage('Run Ansible Playbook') {
-            when {
-                expression { return env.ACTION == 'Apply' }
-            }
-            steps {
+    when {
+        expression { return env.ACTION == 'Apply' }
+    }
+    steps {
         echo "Running Ansible Playbook after applying the changes."
         withAWS(credentials: 'aws-creds', region: 'us-east-1') {
             withCredentials([
                 sshUserPrivateKey(credentialsId: 'ssh-key-prometheus', keyFileVariable: 'SSH_KEY'),
                 string(credentialsId: 'SMTP_PASSWORD', variable: 'SMTP_PASS')
             ]) {
-                dir('prometheus-roles') {
-                   sh '''
-echo "Waiting for EC2 instance to initialize..."
-sleep 60
+                dir('prometheus-terraform') {  // Ensure Terraform outputs are fetched from correct directory
+                    script {
+                        def bastionIp = sh(script: "terraform output -raw bastion_ip", returnStdout: true).trim()
+                        def privateIp = sh(script: "terraform output -raw prometheus_private_ip", returnStdout: true).trim()
+                        
+                        echo "Bastion Host IP: ${bastionIp}"
+                        echo "Prometheus Private IP: ${privateIp}"
 
-echo "Fetching Bastion Host IP..."
-BASTION_IP=$(terraform output -raw bastion_ip)
-echo "Bastion IP: $BASTION_IP"
+                        writeFile file: 'aws_ec2.yml', text: """
+                        [prometheus]
+                        ${privateIp} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/jenkins_key.pem ansible_ssh_common_args='-o ProxyCommand="ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@${bastionIp}"'
+                        """
 
-echo "Fetching Private IP of Prometheus Instance..."
-PRIVATE_IP=$(terraform output -raw prometheus_private_ip)
-echo "Private IP: $PRIVATE_IP"
+                        writeFile file: '~/.ssh/jenkins_key.pem', text: "${SSH_KEY}"
+                        sh 'chmod 600 ~/.ssh/jenkins_key.pem'
 
-echo "Running Ansible Playbook..."
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i aws_ec2.yml playbook.yml \
-  --private-key=$SSH_KEY -u ubuntu --extra-vars "ansible_ssh_common_args='-o ProxyCommand=\"ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY -W %h:%p ubuntu@$BASTION_IP\"' smtp_auth_password=\"${SMTP_PASS}\""
-
-
-    '''
-}
+                        echo "Executing Ansible Playbook..."
+                        sh """
+                        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i aws_ec2.yml playbook.yml \
+                        --private-key=~/.ssh/jenkins_key.pem -u ubuntu --extra-vars "smtp_auth_password=${SMTP_PASS}"
+                        """
+                    }
+                }
             }
         }
     }
 }
+
 
         stage('Terraform Destroy') {
             when {
