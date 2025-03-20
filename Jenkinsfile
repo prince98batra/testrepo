@@ -85,11 +85,22 @@ pipeline {
             ]) {
                 dir('prometheus-roles') {
                    sh '''
-    echo "Waiting for EC2 instance to initialize..."
-    sleep 60
-    echo "Running Ansible Playbook..."
-    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i aws_ec2.yml playbook.yml \
-    --private-key=$SSH_KEY -u ubuntu --extra-vars 'smtp_auth_password="${SMTP_PASS}"'
+echo "Waiting for EC2 instance to initialize..."
+sleep 60
+
+echo "Fetching Bastion Host IP..."
+BASTION_IP=$(terraform output -raw bastion_ip)
+echo "Bastion IP: $BASTION_IP"  # Debugging step to verify the fetched Bastion IP
+
+echo "Fetching Private IP of Prometheus Instance..."
+PRIVATE_IP=$(ansible-inventory -i aws_ec2.yml --list | jq -r '.["_meta"]["hostvars"] | to_entries[] | select(.value.ansible_host != null) | .value.ansible_host')
+echo "Prometheus Private IP: $PRIVATE_IP"  # Debugging step to verify the private IP
+
+echo "Running Ansible Playbook..."
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i aws_ec2.yml playbook.yml \
+--private-key=$SSH_KEY -u ubuntu --extra-vars 'smtp_auth_password="${SMTP_PASS}"' \
+-e "ansible_ssh_common_args='-o ProxyCommand=\"ssh -i $SSH_KEY -o StrictHostKeyChecking=no -W %h:%p ubuntu@$BASTION_IP\"'"
+
     '''
 }
             }
