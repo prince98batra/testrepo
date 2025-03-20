@@ -104,15 +104,24 @@ pipeline {
                         }
 
                         dir('prometheus-roles') {
-                            echo "Executing Ansible Playbook with Dynamic Inventory..."
-                            sh '''
-                            export ANSIBLE_HOST_KEY_CHECKING=False
-                            ansible-playbook -i aws_ec2.yml playbook.yml \
-                            --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
-                            --extra-vars "smtp_auth_password=${SMTP_PASS}" \
-                            -e "ansible_ssh_common_args='-o ProxyCommand=\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@$(cat ../prometheus-terraform/bastion_ip.txt)\"'"
-                            '''
-                        }
+    echo "Executing Ansible Playbook with Dynamic Inventory..."
+    sh '''
+    export ANSIBLE_HOST_KEY_CHECKING=False
+    bastion_ip=$(cat ../prometheus-terraform/bastion_ip.txt | tr -d '\n')
+
+    if [[ -z "$bastion_ip" ]]; then
+        echo "❌ Error: Bastion Host IP is empty. Ensure Terraform output is correct."
+        exit 1
+    fi
+
+    echo "Bastion IP: $bastion_ip"
+
+    ansible-playbook -i aws_ec2.yml playbook.yml \
+    --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
+    --extra-vars "smtp_auth_password=${SMTP_PASS}" \
+    -e "ansible_ssh_common_args='-o ProxyCommand=\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@$bastion_ip\"'"
+    '''
+}
                     }
                 }
             }
