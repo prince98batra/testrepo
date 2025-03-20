@@ -124,8 +124,6 @@ ansible-playbook -i aws_ec2.yml playbook.yml \
 --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
 --extra-vars '{\"smtp_auth_password\":\"${SMTP_PASS}\"}'
 """
-
-
                             }
                         }
                     }
