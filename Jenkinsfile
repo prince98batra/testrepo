@@ -98,8 +98,8 @@ pipeline {
                         chmod 600 ~/.ssh/jenkins_key.pem
                         '''
 
-                        // Save bastion IP for later use
-                        writeFile file: '../prometheus-roles/bastion_ip.txt', text: bastionIp
+                        // Save bastion IP as an environment variable for Ansible
+                        env.BASTION_IP = bastionIp
                     }
                 }
 
@@ -107,23 +107,14 @@ pipeline {
                     script {
                         echo "🚀 Executing Ansible Playbook with Dynamic Inventory..."
 
-                        // Verify the bastion_ip file exists before proceeding
-                        def bastionIpFile = sh(script: "cat bastion_ip.txt 2>/dev/null || echo ''", returnStdout: true).trim()
-
-                        if (!bastionIpFile) {
-                            error("❌ Bastion Host IP file is empty or missing. Ensure Terraform output is correct.")
-                        }
-
-                        echo "🔗 Bastion IP: ${bastionIpFile}"
-
-                        withEnv(["SMTP_AUTH_PASSWORD=${SMTP_PASS}"]) {  // Mask SMTP password
+                        withEnv(["SMTP_AUTH_PASSWORD=${SMTP_PASS}"]) {  
                             sh """
                             export ANSIBLE_HOST_KEY_CHECKING=False
+                            export BASTION_IP=${env.BASTION_IP}
 
                             ansible-playbook -i aws_ec2.yml playbook.yml \\
                             --private-key=~/.ssh/jenkins_key.pem -u ubuntu \\
-                            --extra-vars 'smtp_auth_password=\"${SMTP_AUTH_PASSWORD}\"' \\
-                            -e 'ansible_ssh_common_args=\"-o ProxyCommand=\\\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@${bastionIpFile}\\\"\"'
+                            --extra-vars 'smtp_auth_password=\"${SMTP_AUTH_PASSWORD}\"'
                             """
                         }
                     }
