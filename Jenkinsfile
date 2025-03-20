@@ -51,7 +51,6 @@ pipeline {
                     def userInput = input message: 'Choose the action to perform:', parameters: [
                         choice(name: 'ACTION', choices: ['Apply', 'Destroy'], description: 'Select whether to apply or destroy.')
                     ]
-
                     env.ACTION = userInput
                 }
             }
@@ -72,48 +71,52 @@ pipeline {
         }
 
         stage('Run Ansible Playbook') {
-    when {
-        expression { return env.ACTION == 'Apply' }
-    }
-    steps {
-        echo "Running Ansible Playbook after applying the changes."
-        withAWS(credentials: 'aws-creds', region: 'us-east-1') {
-            withCredentials([
-                sshUserPrivateKey(credentialsId: 'ssh-key-prometheus', keyFileVariable: 'SSH_KEY'),
-                string(credentialsId: 'SMTP_PASSWORD', variable: 'SMTP_PASS')
-            ]) {
-                dir('prometheus-terraform') {
-                    script {
-                        def bastionIp = sh(script: "terraform output -raw bastion_ip", returnStdout: true).trim()
-                        
-                        if (bastionIp == null || bastionIp.isEmpty()) {
-                            error("Bastion Host IP could not be fetched. Check Terraform outputs.")
-                        }
-                        
-                        echo "Bastion Host IP: ${bastionIp}"
+            when {
+                expression { return env.ACTION == 'Apply' }
+            }
+            steps {
+                echo "Running Ansible Playbook after applying the changes."
+                withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    withCredentials([
+                        sshUserPrivateKey(credentialsId: 'ssh-key-prometheus', keyFileVariable: 'SSH_KEY'),
+                        string(credentialsId: 'SMTP_PASSWORD', variable: 'SMTP_PASS')
+                    ]) {
+                        dir('prometheus-terraform') {
+                            script {
+                                def bastionIp = sh(script: "terraform output -raw bastion_ip", returnStdout: true).trim()
+                                
+                                if (bastionIp == null || bastionIp.isEmpty()) {
+                                    error("Bastion Host IP could not be fetched. Check Terraform outputs.")
+                                }
+                                
+                                echo "Bastion Host IP: ${bastionIp}"
 
-                        // Save SSH private key
-                        sh '''
-                        mkdir -p ~/.ssh
-                        echo "$SSH_KEY" > ~/.ssh/jenkins_key.pem
-                        chmod 600 ~/.ssh/jenkins_key.pem
-                        '''
-                        
-                        // Save bastion IP to a file for debugging
-                        writeFile file: 'bastion_ip.txt', text: bastionIp
+                                // Save SSH private key
+                                sh '''
+                                mkdir -p ~/.ssh
+                                echo "$SSH_KEY" > ~/.ssh/jenkins_key.pem
+                                chmod 600 ~/.ssh/jenkins_key.pem
+                                '''
+                                
+                                // Save bastion IP to a file for debugging
+                                writeFile file: 'bastion_ip.txt', text: bastionIp
+                            }
+                        }
+
+                        dir('prometheus-roles') {
+                            echo "Executing Ansible Playbook with Dynamic Inventory..."
+                            sh '''
+                            export ANSIBLE_HOST_KEY_CHECKING=False
+                            ansible-playbook -i aws_ec2.yml playbook.yml \
+                            --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
+                            --extra-vars "smtp_auth_password=${SMTP_PASS}" \
+                            -e "ansible_ssh_common_args='-o ProxyCommand=\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@$(cat ../prometheus-terraform/bastion_ip.txt)\"'"
+                            '''
+                        }
                     }
                 }
-
-                dir('prometheus-roles') {
-                    echo "Executing Ansible Playbook with Dynamic Inventory..."
-                    sh '''
-                    export ANSIBLE_HOST_KEY_CHECKING=False
-                    ansible-playbook -i aws_ec2.yml playbook.yml \
-                    --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
-                    --extra-vars "smtp_auth_password=${SMTP_PASS}" \
-                    -e "ansible_ssh_common_args='-o ProxyCommand=\"ssh -i ~/.ssh/jenkins_key.pem -W %h:%p ubuntu@$(cat ../prometheus-terraform/bastion_ip.txt)\"'"
-                    '''
-                }
+            }
+        }
 
         stage('Terraform Destroy') {
             when {
