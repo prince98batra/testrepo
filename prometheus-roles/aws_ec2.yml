@@ -7,3 +7,4 @@ filters:
   instance-state-name: running
 compose:
   ansible_host: private_ip_address
+  ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -J ubuntu@{{ lookup('env', 'BASTION_IP') }}"
