@@ -4,7 +4,10 @@ resource "aws_instance" "bastion" {
   subnet_id              = var.public_subnet_id
   key_name               = var.key_name
   vpc_security_group_ids = [var.bastion_sg_id]
-  tags                   = { Name = "bastion-host" }
+   tags = {
+    Name        = "prometheus-server"
+    fetch_name  = "prometheus-instance"
+  }
 }
 
 resource "aws_instance" "prometheus" {
