@@ -70,7 +70,7 @@ pipeline {
             }
         }
 
-        stage('Run Ansible Playbook') {
+        sstage('Run Ansible Playbook') {
     when {
         expression { return env.ACTION == 'Apply' }
     }
@@ -88,7 +88,7 @@ pipeline {
                         if (!bastionIp) {
                             error("❌ Bastion Host IP could not be fetched. Check Terraform outputs.")
                         }
-                        
+
                         echo "✅ Bastion Host IP: ${bastionIp}"
 
                         // Save SSH private key securely
@@ -98,8 +98,8 @@ pipeline {
                         chmod 600 ~/.ssh/jenkins_key.pem
                         '''
 
-                        // Save bastion IP as an environment variable for Ansible
-                        env.BASTION_IP = bastionIp
+                        // Save bastion IP for use in inventory
+                        writeFile file: '../prometheus-roles/bastion_ip.txt', text: bastionIp
                     }
                 }
 
@@ -107,16 +107,23 @@ pipeline {
                     script {
                         echo "🚀 Executing Ansible Playbook with Dynamic Inventory..."
 
-                        withEnv(["SMTP_AUTH_PASSWORD=${SMTP_PASS}"]) {  
-                            sh """
-                            export ANSIBLE_HOST_KEY_CHECKING=False
-                            export BASTION_IP=${env.BASTION_IP}
+                        // Verify bastion_ip.txt exists
+                        def bastionIpFile = sh(script: "cat bastion_ip.txt 2>/dev/null || echo ''", returnStdout: true).trim()
 
-                            ansible-playbook -i aws_ec2.yml playbook.yml \\
-                            --private-key=~/.ssh/jenkins_key.pem -u ubuntu \\
-                            --extra-vars 'smtp_auth_password=\"${SMTP_AUTH_PASSWORD}\"'
-                            """
+                        if (!bastionIpFile) {
+                            error("❌ Bastion Host IP file is empty or missing. Ensure Terraform output is correct.")
                         }
+
+                        echo "🔗 Bastion IP: ${bastionIpFile}"
+
+                        sh """
+                        export ANSIBLE_HOST_KEY_CHECKING=False
+                        export BASTION_IP=${bastionIpFile}
+
+                        ansible-playbook -i aws_ec2.yml playbook.yml \
+                        --private-key=~/.ssh/jenkins_key.pem -u ubuntu \
+                        --extra-vars 'smtp_auth_password=${SMTP_PASS}'
+                        """
                     }
                 }
             }
