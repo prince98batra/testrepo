@@ -48,12 +48,15 @@ sudo systemctl status cron
 ### 2.2 Start cron (if inactive)
 If cron is already active, this command will simply ensure it's running without restarting it unnecessarily.
 
-`sudo systemctl start cron`
-
+```
+sudo systemctl start cron
+```
 
 ### 2.3 Enable cron on system boot 
 
-`sudo systemctl enable cron`
+```
+sudo systemctl enable cron
+```
 
 ## 3. Cron Syntax Format
 
@@ -75,13 +78,17 @@ Learn how to write the correct cron job schedule format to run tasks at specific
 
 Open the cron table (crontab) of the current user in edit mode, so you can create, modify, or delete scheduled tasks (cron jobs).
 
-`crontab -e`
+```
+crontab -e
+```
 
 ### 4.1 Example
 
 #### Step 1: Create a Script
 
-`nano /home/ubuntu/hello.sh`
+```
+nano /home/ubuntu/hello.sh
+```
 
 Paste this into the file:
 ```bash
@@ -94,53 +101,73 @@ chmod +x /home/ubuntu/hello.sh
 ```
 
 #### Step 2: Schedule It in Cron
-`crontab -e`
+```
+crontab -e
+```
 
 Add your cron job in the file:
-`0 9 * * * /home/ubuntu/hello.sh`
+```
+0 9 * * * /home/ubuntu/hello.sh
+```
 
 This will run the hello.sh script every day at 9:00 AM.
 
 #### Step 3: Verify It’s Working
-`cat /home/ubuntu/hello_log.txt`
+```
+cat /home/ubuntu/hello_log.txt
+```
 
 You should see something like:
 
-`Hello from cron at Mon Apr 14 13:21:01 UTC 2025`
+```
+Hello from cron at Mon Apr 14 13:21:01 UTC 2025
+```
 
 ## 5. Viewing Cron Jobs
 
 ### 5.1 For Current User
 List your scheduled jobs:
 
-`crontab -l`
+```
+crontab -l
+```
 
 ### 5.2 For Another User (as root)
 
-`crontab -u username -l`
+```
+crontab -u username -l
+```
 
 ## 6. Removing Cron Jobs
 
 ### 6.1 Remove All Cron Jobs without confirmation
 
-`crontab -r`
+```
+crontab -r
+```
 
 ### 6.2 Remove All Cron Jobs with confirmation:
 
-`crontab -i -r`
+```
+crontab -i -r
+```
 
 ## 7. To edit your existing cron jobs
 
 Open the crontab:
 
-`crontab -e`
+```
+crontab -e
+```
 
 Modify the scheduled jobs (e.g., change the time or script) in the crontab file.  
 Save and exit after making the changes.
 
 ## 8. Check System Cron Logs
 
-`grep CRON /var/log/syslog`
+```
+grep CRON /var/log/syslog
+```
 
 This command will show logs for cron job executions, both user-specific and system-wide jobs.
 
@@ -153,10 +180,14 @@ Can Be Used For:
 #### Step 1: Open the system cron file:
 
 # This file affects all users, and it's useful for system-wide cron jobs.
-`sudo nano /etc/crontab`
+```
+sudo nano /etc/crontab
+```
 
 #### Step 2: Add the following line at the bottom:
-`0 2 * * * root /home/ubuntu/hello.sh`
+```
+0 2 * * * root /home/ubuntu/hello.sh
+```
 This runs the script daily at 2:00 AM as the root user
 
 ### 8.2 Custom Cron Files Directory:
