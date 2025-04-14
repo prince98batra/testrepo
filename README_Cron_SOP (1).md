@@ -172,9 +172,8 @@ grep CRON /var/log/syslog
 This command will show logs for cron job executions, both user-specific and system-wide jobs.
 
 ### 8.1 System-wide Cron File 
-**Location:** ```
-/etc/crontab
-```  
+**Location:** `/etc/crontab`  
+
 Can Be Used For:
 ✅ Running scripts as any specific user (e.g., root, ubuntu, etc.) — not just the current one.
 ✅ Helpful when you want a task to run with specific permissions.
@@ -202,18 +201,26 @@ The /etc/cron.d/ directory allows you to add custom cron job files that run as s
 
 #### Step 1: Create a new file in /etc/cron.d/ for user1. 
 Let’s name it user1_hello_cron
-`sudo nano /etc/cron.d/user1_hello_cron`
+```
+sudo nano /etc/cron.d/user1_hello_cron
+```
 
 #### Step 2: Add the following line to run hello.sh:
-`0 2 * * * user1 /home/ubuntu/hello.sh`
+```
+0 2 * * * user1 /home/ubuntu/hello.sh
+```
 This runs the script daily at 2:00 AM as the user1
 
 #### Step 3: Create a new file in /etc/cron.d/ for user2. 
 Let’s name it user2_hello_cron
-`sudo nano /etc/cron.d/user2_hello_cron`
+```
+sudo nano /etc/cron.d/user2_hello_cron
+```
 
 #### Step 4: Add the following line to run hello.sh:
-`0 2 * * * user2 /home/ubuntu/hello.sh`
+```
+0 2 * * * user2 /home/ubuntu/hello.sh
+```
 This runs the script daily at 2:00 AM as the user2
 
 ### 8.3 Directory for Hourly Cron Jobs
@@ -224,8 +231,10 @@ The /etc/cron.hourly/ directory is for scripts that need to run every hour. Any 
 **Use Case:** For scripts that perform frequent checks or cleanups.
 
 #### Step 1: Copy your hello.sh script to the /etc/cron.hourly/ directory: 
-`sudo cp /home/ubuntu/hello.sh /etc/cron.hourly/`
-`sudo chmod +x /etc/cron.hourly/hello.sh`
+```
+sudo cp /home/ubuntu/hello.sh /etc/cron.hourly/
+sudo chmod +x /etc/cron.hourly/hello.sh
+```
 
 The script will now run automatically every hour, as /etc/cron.hourly/ is for hourly tasks.
 
@@ -238,8 +247,10 @@ The /etc/cron.daily/ directory is for scripts that need to run once a day. Any e
 
 #### Step : Copy your hello.sh script to the /etc/cron.daily/ directory: 
 
-`sudo cp /home/ubuntu/hello.sh /etc/cron.daily/`
-`sudo chmod +x /etc/cron.daily/hello.sh`
+```
+sudo cp /home/ubuntu/hello.sh /etc/cron.daily/
+sudo chmod +x /etc/cron.daily/hello.sh
+```
 
 The script will now run automatically once a day, as /etc/cron.daily/ is for daily tasks.
 
@@ -252,8 +263,10 @@ The /etc/cron.weekly/ directory is for scripts that need to run once a week. Any
 
 #### Step : Copy your hello.sh script to the /etc/cron.weekly/ directory:
 
-`sudo cp /home/ubuntu/hello.sh /etc/cron.weekly/`
-`sudo chmod +x /etc/cron.weekly/hello.sh`
+```
+sudo cp /home/ubuntu/hello.sh /etc/cron.weekly/
+sudo chmod +x /etc/cron.weekly/hello.sh
+```
 
 The script will now run automatically once a week.
 
@@ -266,8 +279,10 @@ Use Case: For tasks that need to run once a month, such as monthly cleanup or re
 
 #### Step : Copy your hello.sh script to the /etc/cron.monthly/ directory:
 
-`sudo cp /home/ubuntu/hello.sh /etc/cron.monthly/`
-`sudo chmod +x /etc/cron.monthly/hello.sh`
+```
+sudo cp /home/ubuntu/hello.sh /etc/cron.monthly/
+sudo chmod +x /etc/cron.monthly/hello.sh
+```
 
 The script will now run automatically once a month.
 
@@ -276,12 +291,16 @@ The script will now run automatically once a month.
 ## 9.1 Running System Updates
 Run system updates every day at 5 AM:
 
-`0 5 * * * root apt update && apt upgrade -y`
+```
+0 5 * * * root apt update && apt upgrade -y.
+```
 
 ## 9.2 Running System Updates
 Run log rotation every day at midnight:
 
-`0 0 * * * root /usr/sbin/logrotate /etc/logrotate.conf`
+```
+0 0 * * * root /usr/sbin/logrotate /etc/logrotate.conf
+```
 
 ---
 
