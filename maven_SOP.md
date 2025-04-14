@@ -437,48 +437,7 @@ Expected Output
 
 ---
 
-### 6. **Print the Dependency Graph**
-
-- **Command:**  
-  ```bash
-  mvn dependency:resolve
-  ```
-
-- **Expected Output:**  
-  ```bash
-  [INFO] Downloaded: junit:junit:4.13.2
-  [INFO] BUILD SUCCESS
-  ```
-
-- **Purpose:**  
-  This command resolves and downloads all the project dependencies specified in the `pom.xml`.
-
-- **When to Use:**  
-  Use this when you’re setting up a project for the first time or when you’re facing issues with missing dependencies.
-
----
-
-### 7. **Clean the Project and Rebuild It**
-
-- **Command:**  
-  ```bash
-  mvn clean install
-  ```
-
-- **Expected Output:**  
-  ```bash
-  [INFO] BUILD SUCCESS
-  ```
-
-- **Purpose:**  
-  This command cleans the project (removes old build artifacts) and then builds it from scratch. It ensures that no old files are left behind and the project is freshly built.
-
-- **When to Use:**  
-  Use this when you want to ensure a clean start for your project. It's useful when you've made significant changes and want to rebuild everything from scratch.
-
----
-
-### 8. **Show Effective Settings**
+### 6. **Show Effective Settings**
 
 - **Command:**  
   ```bash
@@ -495,28 +454,6 @@ Expected Output
 
 - **When to Use:**  
   Use this when you want to see how Maven's settings are configured or troubleshoot issues related to settings and profiles.
-
----
-
-### 9. **Run a Specific Test Class or Method**
-
-- **Command:**  
-  ```bash
-  mvn -Dtest=ClassName test
-  ```
-
-- **Expected Output:**  
-  ```bash
-  [INFO] Running com.example.projectname.TestClass
-  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-  [INFO] BUILD SUCCESS
-  ```
-
-- **Purpose:**  
-  This runs a specific test class or method, rather than running all the tests in the project.
-
-- **When to Use:**  
-  Use this when you need to test or debug a specific test without running the entire suite of tests.
 
 ---
 
