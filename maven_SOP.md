@@ -395,29 +395,7 @@ Expected Output
 
 ---
 
-### 4. **View Project Dependencies**
-
-- **Command:**  
-  ```bash
-  mvn dependency:tree
-  ```
-
-- **Expected Output:**  
-  ```bash
-  [INFO] com.example.project-name:project-name:jar:1.0-SNAPSHOT
-  [INFO] +- junit:junit:jar:4.13.2:test
-  [INFO] \- org.springframework:spring-core:jar:5.3.8
-  ```
-
-- **Purpose:**  
-  This shows a tree of all the libraries your project depends on. It helps you understand the relationship between your project and other libraries.
-
-- **When to Use:**  
-  Use this when you're having problems with libraries, like missing or conflicting versions.
-
----
-
-### 5. **Force Maven to Update Dependencies**
+### 4. **Force Maven to Update Dependencies**
 
 - **Command:**  
   ```bash
@@ -437,28 +415,7 @@ Expected Output
 
 ---
 
-### 6. **Skip Tests While Building**
-
-- **Command:**  
-  ```bash
-  mvn install -DskipTests
-  ```
-
-- **Expected Output:**  
-  ```bash
-  [INFO] Tests are skipped.
-  [INFO] BUILD SUCCESS
-  ```
-
-- **Purpose:**  
-  This skips running the tests while building the project. It speeds up the build if you're not interested in testing right now.
-
-- **When to Use:**  
-  Use this when you want to build the project quickly and don’t need to run tests (but be careful, as skipping tests can hide potential issues).
-
----
-
-### 7. **Check Your Maven Version**
+### 5. **Check Your Maven Version**
 
 - **Command:**  
   ```bash
@@ -480,7 +437,7 @@ Expected Output
 
 ---
 
-### 8. **Print the Dependency Graph**
+### 6. **Print the Dependency Graph**
 
 - **Command:**  
   ```bash
@@ -501,7 +458,7 @@ Expected Output
 
 ---
 
-### 9. **Clean the Project and Rebuild It**
+### 7. **Clean the Project and Rebuild It**
 
 - **Command:**  
   ```bash
@@ -521,7 +478,7 @@ Expected Output
 
 ---
 
-### 10. **Show Effective Settings**
+### 8. **Show Effective Settings**
 
 - **Command:**  
   ```bash
@@ -541,7 +498,7 @@ Expected Output
 
 ---
 
-### 11. **Run a Specific Test Class or Method**
+### 9. **Run a Specific Test Class or Method**
 
 - **Command:**  
   ```bash
