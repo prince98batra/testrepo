@@ -41,8 +41,9 @@ Automatically run a backup script every night at midnight to save important file
 
 ### 2.1 Check cron status
 
-`sudo systemctl status cron`
-
+```
+sudo systemctl status cron
+```
 
 ### 2.2 Start cron (if inactive)
 If cron is already active, this command will simply ensure it's running without restarting it unnecessarily.
