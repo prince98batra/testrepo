@@ -186,6 +186,17 @@ Scripts here run every hour.
 
 **Use Case:** For scripts that perform frequent checks or cleanups.
 
+## 9. Example Cron Jobs for Common Use Cases
+
+## 9.1 Running System Updates
+Run system updates every day at 5 AM:
+
+`0 5 * * * root apt update && apt upgrade -y`
+
+## 9.2 Running System Updates
+Run log rotation every day at midnight:
+
+`0 0 * * * root /usr/sbin/logrotate /etc/logrotate.conf`
 ---
 
 | Date       | Author        | Change Description         |
