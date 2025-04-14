@@ -184,7 +184,49 @@ Expected Output
 
 ---
 
-### 5. **Run integration tests**
+### 5. **Install the Project Locally**
+
+- **Command:**
+```
+mvn install
+```
+Expected Output
+```
+[INFO] BUILD SUCCESS
+```
+
+- **Purpose:** Compiles, runs tests, and installs the built artifact (e.g., .jar, .war) into the local Maven repository (~/.m2/repository).
+- **When to Use:** Use this when you want to install the project locally for use in other projects or for further testing.
+
+### 6. **Deploying the Project**
+
+- **Command:**
+```
+mvn deploy
+```
+Expected Output
+```
+[INFO] BUILD SUCCESS
+```
+
+- **Purpose:** Deploys the packaged artifact to a remote repository (e.g., Nexus, Artifactory), making it available to other developers or projects.
+- **When to Use:** Use this when you want to share your artifact with other projects or teams by deploying it to a remote repository after a successful build.
+
+### 7. **Validate the Project**
+
+- **Command:**
+```
+mvn validate
+```
+Expected Output
+```
+[INFO] BUILD SUCCESS
+```
+
+- **Purpose:** Validates the project’s configuration and checks for potential issues, ensuring that everything is correctly set up (i.e., POM file, dependencies).
+- **When to Use:** Use this command when you want to verify that your project is correctly configured and doesn't have any major configuration or dependency issues.
+
+### 8. **Run integration tests**
 
 - **Command:** 
 ```
@@ -199,7 +241,7 @@ Expected Output
 
 ---
 
-### 6. **Download all dependencies**
+### 9. **Download all dependencies**
 
 - **Command:** 
 ```
@@ -216,7 +258,7 @@ Expected Output
 
 ---
 
-### 7. **Print all dependencies**
+### 10. **Print all dependencies**
 
 - **Command:**
 ```
@@ -233,7 +275,7 @@ com.example.projectname:project-name:jar:1.0-SNAPSHOT
 
 ---
 
-### 8. **Clean and build the project**
+### 11. **Clean and build the project**
 
 - **Command:** 
 ```
@@ -248,7 +290,7 @@ Expected Output
 
 ---
 
-### 9. **Skip tests during build**
+### 12. **Skip tests during build**
 
 - **Command:** 
 ```
@@ -264,7 +306,7 @@ Expected Output
 
 ---
 
-### 10. **Run a specific test**
+### 13. **Run a specific test**
 
 - **Command:** 
 ```
