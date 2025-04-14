@@ -107,7 +107,6 @@ You write tests in src/test/java
 
 Maven compiles the code, runs tests, and packages it as a deployable file using pom.xml instructions.
 
-## ⚙️ Commonly Used Maven Commands
 
 ## ✅ **Commonly Used Maven Commands**
 
@@ -120,7 +119,7 @@ Maven compiles the code, runs tests, and packages it as a deployable file using 
 ```
 mvn clean
 ```
-
+Expected Output
 ```
 [INFO] Deleting /path/to/project/target
 [INFO] BUILD SUCCESS
@@ -138,7 +137,7 @@ mvn clean
 ```
 mvn compile
 ```  
-
+Expected Output
 ```
 [INFO] Compiling 1 source file to /path/to/project/target/classes
 [INFO] BUILD SUCCESS
@@ -155,7 +154,7 @@ mvn compile
 ```
 mvn test
 ```  
-
+Expected Output
 ```
 [INFO] Running com.example.projectname.TestClass
 [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 sec
@@ -174,6 +173,7 @@ mvn test
 ```
 mvn package
 ```
+Expected Output
 ```
 [INFO] Building jar: /path/to/project/target/project-name-1.0-SNAPSHOT.jar
 [INFO] BUILD SUCCESS
@@ -190,6 +190,7 @@ mvn package
 ```
 mvn verify
 ```  
+Expected Output
 ```
 [INFO] BUILD SUCCESS
 ```
@@ -203,7 +204,8 @@ mvn verify
 - **Command:** 
 ```
 mvn dependency:resolve 
-```  
+``` 
+Expected Output
 ```
 [INFO] Downloaded: junit:junit:4.13.2
 [INFO] BUILD SUCCESS
@@ -220,6 +222,7 @@ mvn dependency:resolve
 ```
 mvn dependency:tree
 ```
+Expected Output
 ```
 com.example.projectname:project-name:jar:1.0-SNAPSHOT
 ├── junit:junit:jar:4.13.2:test
@@ -236,6 +239,7 @@ com.example.projectname:project-name:jar:1.0-SNAPSHOT
 ```
 mvn clean install
 ```
+Expected Output
 ```
 [INFO] BUILD SUCCESS
 ```
@@ -250,6 +254,7 @@ mvn clean install
 ```
 mvn install -DskipTests
 ```
+Expected Output
 ```
 [INFO] Tests are skipped.
 [INFO] BUILD SUCCESS
@@ -265,6 +270,7 @@ mvn install -DskipTests
 ```
 mvn -Dtest=ClassName test
 ```  
+Expected Output
 ```
 [INFO] Running com.example.projectname.TestClass
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
@@ -288,58 +294,7 @@ mvn -Dtest=ClassName test
 | 🔄 Rebuild without cache | `mvn clean compile` |
 | 🧼 Build in offline mode | `mvn install -o` |
 
----
 
-## 📁 Example Use Case
-
-### Scenario: You want to build and run a local Java app
-
-```bash
-cd ~/projects/java
-mvn clean install
-java -jar target/your-app-name.jar
-```
-
----
-
-## 🛠 How to Modify the Project
-
-- Add dependencies in `pom.xml` under `<dependencies>` block.
-- Use `mvn validate` to verify `pom.xml`.
-- Re-run:
-  ```bash
-  mvn clean compile
-  ```
-
----
-
-## 🗼 Cleanup Build Files
-
-To remove `target/` folder after build:
-```bash
-mvn clean
-```
-
----
-
-## 📝 Sample pom.xml (Mini)
-
-```xml
-<project>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.prince</groupId>
-  <artifactId>demo-app</artifactId>
-  <version>1.0.0</version>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-</project>
-```
 
 ---
 
