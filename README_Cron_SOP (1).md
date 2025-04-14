@@ -181,7 +181,7 @@ Can Be Used For:
 #### Step 1: Open the system cron file:
 
 ```
-# This file affects all users, and it's useful for system-wide cron jobs.
+#This file affects all users, and it's useful for system-wide cron jobs.
 sudo nano /etc/crontab
 ```
 
