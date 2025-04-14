@@ -330,6 +330,21 @@ Expected Output
 ---
 
 
+## 😞 Debugging & Troubleshooting Commands
+
+
+### 1. **Enable Debugging Output**
+
+- **Command:**  
+  ```bash
+  mvn -X
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [DEBUG] [INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ project-name ---
+  [DEBUG] [INFO] BUILD SUCCESS
+  ```
 
 - **Purpose:**  
   This command shows detailed information about what Maven is doing during the build. It helps you understand what’s happening behind the scenes.
