@@ -172,7 +172,9 @@ grep CRON /var/log/syslog
 This command will show logs for cron job executions, both user-specific and system-wide jobs.
 
 ### 8.1 System-wide Cron File 
-**Location:** `/etc/crontab`  
+**Location:** ```
+/etc/crontab
+```  
 Can Be Used For:
 ✅ Running scripts as any specific user (e.g., root, ubuntu, etc.) — not just the current one.
 ✅ Helpful when you want a task to run with specific permissions.
