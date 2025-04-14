@@ -198,6 +198,8 @@ Expected Output
 - **Purpose:** Compiles, runs tests, and installs the built artifact (e.g., .jar, .war) into the local Maven repository (~/.m2/repository).
 - **When to Use:** Use this when you want to install the project locally for use in other projects or for further testing.
 
+---
+
 ### 6. **Deploying the Project**
 
 - **Command:**
@@ -212,6 +214,8 @@ Expected Output
 - **Purpose:** Deploys the packaged artifact to a remote repository (e.g., Nexus, Artifactory), making it available to other developers or projects.
 - **When to Use:** Use this when you want to share your artifact with other projects or teams by deploying it to a remote repository after a successful build.
 
+---
+
 ### 7. **Validate the Project**
 
 - **Command:**
@@ -225,6 +229,8 @@ Expected Output
 
 - **Purpose:** Validates the project’s configuration and checks for potential issues, ensuring that everything is correctly set up (i.e., POM file, dependencies).
 - **When to Use:** Use this command when you want to verify that your project is correctly configured and doesn't have any major configuration or dependency issues.
+
+---
 
 ### 8. **Run integration tests**
 
@@ -324,19 +330,221 @@ Expected Output
 ---
 
 
-## 😞 Debugging & Troubleshooting Commands
 
-| Situation | Command / Tip |
-|----------|----------------|
-| 🤩 Check Maven version | `mvn -v` |
-| 🧪 Skip test execution | `mvn install -DskipTests` |
-| 🔍 Debug logs | `mvn install -X` |
-| 📆 Force update dependencies | `mvn clean install -U` |
-| 📅 See full dependency list | `mvn dependency:tree` |
-| 🔄 Rebuild without cache | `mvn clean compile` |
-| 🧼 Build in offline mode | `mvn install -o` |
+- **Purpose:**  
+  This command shows detailed information about what Maven is doing during the build. It helps you understand what’s happening behind the scenes.
 
+- **When to Use:**  
+  Use this when your build fails or behaves unexpectedly. The detailed logs will help you find the problem.
 
+---
+
+### 2. **Print the Final POM (Project Configuration)**
+
+- **Command:**  
+  ```bash
+  mvn help:effective-pom
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] Scanning for projects...
+  [INFO] Effective POM for project project-name: 1.0-SNAPSHOT
+  ```
+
+- **Purpose:**  
+  This shows the full configuration Maven is using for your project. It includes settings from your `pom.xml` file and any parent settings it inherits.
+
+- **When to Use:**  
+  Use this when you want to see all the configurations Maven is using, especially if you're unsure which settings are being applied.
+
+---
+
+### 3. **Show Information About a Plugin**
+
+- **Command:**  
+  ```bash
+  mvn help:describe -Dplugin=<plugin-name> -Ddetail
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] Describing plugin org.apache.maven.plugins:maven-clean-plugin:3.1.0
+  ```
+
+- **Purpose:**  
+  This shows detailed information about a specific Maven plugin, like its version and what it can do.
+
+- **When to Use:**  
+  Use this if you're having issues with a specific plugin and need to understand what it does or which version is being used.
+
+---
+
+### 4. **View Project Dependencies**
+
+- **Command:**  
+  ```bash
+  mvn dependency:tree
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] com.example.project-name:project-name:jar:1.0-SNAPSHOT
+  [INFO] +- junit:junit:jar:4.13.2:test
+  [INFO] \- org.springframework:spring-core:jar:5.3.8
+  ```
+
+- **Purpose:**  
+  This shows a tree of all the libraries your project depends on. It helps you understand the relationship between your project and other libraries.
+
+- **When to Use:**  
+  Use this when you're having problems with libraries, like missing or conflicting versions.
+
+---
+
+### 5. **Force Maven to Update Dependencies**
+
+- **Command:**  
+  ```bash
+  mvn clean install -U
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] BUILD SUCCESS
+  ```
+
+- **Purpose:**  
+  This forces Maven to download the latest versions of the libraries from the internet, even if it already has a copy in its local storage.
+
+- **When to Use:**  
+  Use this when you think Maven has old or outdated libraries stored and you need to update them.
+
+---
+
+### 6. **Skip Tests While Building**
+
+- **Command:**  
+  ```bash
+  mvn install -DskipTests
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] Tests are skipped.
+  [INFO] BUILD SUCCESS
+  ```
+
+- **Purpose:**  
+  This skips running the tests while building the project. It speeds up the build if you're not interested in testing right now.
+
+- **When to Use:**  
+  Use this when you want to build the project quickly and don’t need to run tests (but be careful, as skipping tests can hide potential issues).
+
+---
+
+### 7. **Check Your Maven Version**
+
+- **Command:**  
+  ```bash
+  mvn -v
+  ```
+
+- **Expected Output:**  
+  ```bash
+  Apache Maven 3.6.3
+  Maven home: /path/to/maven
+  Java version: 1.8.0_252, vendor: Oracle Corporation
+  ```
+
+- **Purpose:**  
+  This shows the version of Maven and Java you are using. It helps you ensure that your tools are up to date.
+
+- **When to Use:**  
+  Use this if you need to check which version of Maven or Java is installed, especially when you face compatibility issues.
+
+---
+
+### 8. **Print the Dependency Graph**
+
+- **Command:**  
+  ```bash
+  mvn dependency:resolve
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] Downloaded: junit:junit:4.13.2
+  [INFO] BUILD SUCCESS
+  ```
+
+- **Purpose:**  
+  This command resolves and downloads all the project dependencies specified in the `pom.xml`.
+
+- **When to Use:**  
+  Use this when you’re setting up a project for the first time or when you’re facing issues with missing dependencies.
+
+---
+
+### 9. **Clean the Project and Rebuild It**
+
+- **Command:**  
+  ```bash
+  mvn clean install
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] BUILD SUCCESS
+  ```
+
+- **Purpose:**  
+  This command cleans the project (removes old build artifacts) and then builds it from scratch. It ensures that no old files are left behind and the project is freshly built.
+
+- **When to Use:**  
+  Use this when you want to ensure a clean start for your project. It's useful when you've made significant changes and want to rebuild everything from scratch.
+
+---
+
+### 10. **Show Effective Settings**
+
+- **Command:**  
+  ```bash
+  mvn help:effective-settings
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] Effective settings for Maven
+  ```
+
+- **Purpose:**  
+  This shows the combined settings that Maven is using, including default settings and any custom configurations you've added.
+
+- **When to Use:**  
+  Use this when you want to see how Maven's settings are configured or troubleshoot issues related to settings and profiles.
+
+---
+
+### 11. **Run a Specific Test Class or Method**
+
+- **Command:**  
+  ```bash
+  mvn -Dtest=ClassName test
+  ```
+
+- **Expected Output:**  
+  ```bash
+  [INFO] Running com.example.projectname.TestClass
+  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
+  [INFO] BUILD SUCCESS
+  ```
+
+- **Purpose:**  
+  This runs a specific test class or method, rather than running all the tests in the project.
+
+- **When to Use:**  
+  Use this when you need to test or debug a specific test without running the entire suite of tests.
 
 ---
 
