@@ -197,6 +197,7 @@ Run system updates every day at 5 AM:
 Run log rotation every day at midnight:
 
 `0 0 * * * root /usr/sbin/logrotate /etc/logrotate.conf`
+
 ---
 
 | Date       | Author        | Change Description         |
