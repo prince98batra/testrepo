@@ -346,11 +346,8 @@ Expected Output
   [DEBUG] [INFO] BUILD SUCCESS
   ```
 
-- **Purpose:**  
-  This command shows detailed information about what Maven is doing during the build. It helps you understand what’s happening behind the scenes.
-
-- **When to Use:**  
-  Use this when your build fails or behaves unexpectedly. The detailed logs will help you find the problem.
+- **Purpose:** Shows detailed logs for the entire build process.  
+- **When to Use:** When builds fail and you need more context for debugging.
 
 ---
 
@@ -367,11 +364,8 @@ Expected Output
   [INFO] Effective POM for project project-name: 1.0-SNAPSHOT
   ```
 
-- **Purpose:**  
-  This shows the full configuration Maven is using for your project. It includes settings from your `pom.xml` file and any parent settings it inherits.
-
-- **When to Use:**  
-  Use this when you want to see all the configurations Maven is using, especially if you're unsure which settings are being applied.
+- **Purpose:** Shows complete effective project configuration.  
+- **When to Use:** To view all applied POM settings including inherited ones.
 
 ---
 
@@ -387,11 +381,8 @@ Expected Output
   [INFO] Describing plugin org.apache.maven.plugins:maven-clean-plugin:3.1.0
   ```
 
-- **Purpose:**  
-  This shows detailed information about a specific Maven plugin, like its version and what it can do.
-
-- **When to Use:**  
-  Use this if you're having issues with a specific plugin and need to understand what it does or which version is being used.
+- **Purpose:** Describes usage, goals, and config of a specific plugin.  
+- **When to Use:** When understanding or troubleshooting Maven plugins.
 
 ---
 
@@ -407,12 +398,10 @@ Expected Output
   [INFO] BUILD SUCCESS
   ```
 
-- **Purpose:**  
-  This forces Maven to download the latest versions of the libraries from the internet, even if it already has a copy in its local storage.
+- **Purpose:**  Downloads the latest versions of dependencies, even if already cached locally.
 
-- **When to Use:**  
-  Use this when you think Maven has old or outdated libraries stored and you need to update them.
-
+- **When to Use:**  When your project uses outdated libraries or new versions are not picked up
+  
 ---
 
 ### 5. **Check Your Maven Version**
@@ -429,11 +418,9 @@ Expected Output
   Java version: 1.8.0_252, vendor: Oracle Corporation
   ```
 
-- **Purpose:**  
-  This shows the version of Maven and Java you are using. It helps you ensure that your tools are up to date.
+- **Purpose:**  Shows your Maven and Java versions.
 
-- **When to Use:**  
-  Use this if you need to check which version of Maven or Java is installed, especially when you face compatibility issues.
+- **When to Use:**  To confirm installed versions or check compatibility issues.
 
 ---
 
@@ -449,11 +436,9 @@ Expected Output
   [INFO] Effective settings for Maven
   ```
 
-- **Purpose:**  
-  This shows the combined settings that Maven is using, including default settings and any custom configurations you've added.
+- **Purpose:**  Displays the final settings Maven uses (default + custom).
 
-- **When to Use:**  
-  Use this when you want to see how Maven's settings are configured or troubleshoot issues related to settings and profiles.
+- **When to Use:**  For debugging settings or verifying profile configurations.
 
 ---
 
