@@ -125,8 +125,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Deletes the `target/` directory, where all compiled files and packaged files are stored.  
-- **When to Use:** This command is used before building fresh code to ensure no old or unnecessary files remain. It is helpful when you want to start from scratch and avoid using old build files.
+- **Purpose:** Removes the `target/` directory with old build files.  
+- **When to Use:** Before a fresh build to ensure no leftover files affect the process.
 
 ---
 
@@ -143,8 +143,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Compiles the source code located in the `src/main/java` directory into bytecode.  
-- **When to Use:** Use this command to check if your Java code has any compilation errors. It helps to ensure that the code is free of syntax issues before further processing.
+- **Purpose:** Converts source code into bytecode.  
+- **When to Use:** To check for compilation errors before testing or packaging.
 
 ---
 
@@ -161,8 +161,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Executes unit tests located in the `src/test/java` directory using a testing framework (like JUnit).  
-- **When to Use:** Run this command to validate the core logic of your project by running unit tests. This ensures that individual components of your application work as expected.
+- **Purpose:** Runs test cases from `src/test/java` using test frameworks.  
+- **When to Use:** To verify if individual components are working correctly.
 
 ---
 
@@ -179,8 +179,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Packages the compiled code into a deployable `.jar` or `.war` file (as specified in the `pom.xml`).  
-- **When to Use:** Use this command when you're ready to create a deployable file, such as when preparing the application for deployment or distribution.
+- **Purpose:** Packages compiled code into deployable artifacts like `.jar` or `.war`.  
+- **When to Use:** When preparing the application for deployment or delivery.
 
 ---
 
@@ -195,8 +195,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Compiles, runs tests, and installs the built artifact (e.g., .jar, .war) into the local Maven repository (~/.m2/repository).
-- **When to Use:** Use this when you want to install the project locally for use in other projects or for further testing.
+- **Purpose:** Installs built artifact into your local Maven repository.  
+- **When to Use:** When you want the project available locally for use in other projects.
 
 ---
 
@@ -211,8 +211,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Deploys the packaged artifact to a remote repository (e.g., Nexus, Artifactory), making it available to other developers or projects.
-- **When to Use:** Use this when you want to share your artifact with other projects or teams by deploying it to a remote repository after a successful build.
+- **Purpose:** Uploads the artifact to a remote Maven repository.  
+- **When to Use:** When sharing the project with teams or external applications.
 
 ---
 
@@ -227,8 +227,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Validates the project’s configuration and checks for potential issues, ensuring that everything is correctly set up (i.e., POM file, dependencies).
-- **When to Use:** Use this command when you want to verify that your project is correctly configured and doesn't have any major configuration or dependency issues.
+- **Purpose:** Verifies if project structure and dependencies are correctly set.  
+- **When to Use:** For checking proper project setup before proceeding.
 
 ---
 
@@ -242,8 +242,8 @@ Expected Output
 ```
 [INFO] BUILD SUCCESS
 ```
-- **Purpose:** Runs the full test lifecycle, including unit tests and integration tests, and validates the build.  
-- **When to Use:** Use this command before the final deployment of the project to ensure that all components work together and the build is ready for release.
+- **Purpose:** Runs full test lifecycle including integration tests.  
+- **When to Use:** To ensure the system works as a whole before deployment.
 
 ---
 
@@ -259,8 +259,8 @@ Expected Output
 [INFO] BUILD SUCCESS
 ```
 
-- **Purpose:** Downloads all libraries and dependencies specified in the `pom.xml` file.  
-- **When to Use:** Use this command when you are setting up the project for the first time or if Maven cannot find the required dependencies. It ensures that all necessary libraries are available for your project.
+- **Purpose:** Fetches all libraries defined in `pom.xml`.  
+- **When to Use:** During initial setup or when dependencies fail to resolve.
 
 ---
 
@@ -276,8 +276,8 @@ com.example.projectname:project-name:jar:1.0-SNAPSHOT
 ├── junit:junit:jar:4.13.2:test
 └── org.springframework:spring-core:jar:5.3.8
 ```
-- **Purpose:** Displays a tree structure of all project dependencies, including transitive dependencies.  
-- **When to Use:** Use this command when you need to examine or debug dependency issues. It helps you understand the entire structure of your project’s libraries and their versions.
+- **Purpose:** Shows a tree of direct and transitive dependencies.  
+- **When to Use:** To inspect or debug library conflicts and structure.
 
 ---
 
@@ -291,8 +291,8 @@ Expected Output
 ```
 [INFO] BUILD SUCCESS
 ```
-- **Purpose:** Cleans previous builds, compiles, runs tests, and installs the packaged artifact into your local Maven repository.  
-- **When to Use:** This command is used to perform a complete build process. It’s the most commonly used command to ensure the project is fresh, compiled, and installed correctly in your local repository.
+- **Purpose:** Cleans old builds, compiles code, runs tests, installs locally.  
+- **When to Use:** For a full clean rebuild and local installation.
 
 ---
 
@@ -307,8 +307,8 @@ Expected Output
 [INFO] Tests are skipped.
 [INFO] BUILD SUCCESS
 ```
-- **Purpose:** Builds and installs the project but skips running tests.  
-- **When to Use:** Use this command when you need to quickly build and install the project without running tests, typically during development. However, **skipping tests is not recommended for production builds.**
+- **Purpose:** Builds and installs without running tests.  
+- **When to Use:** During quick development cycles (avoid for production builds).
 
 ---
 
@@ -324,8 +324,8 @@ Expected Output
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
 [INFO] BUILD SUCCESS
 ```
-- **Purpose:** Runs a specific test class or method instead of executing all tests in the project.  
-- **When to Use:** Use this command when you need to test or debug a specific test class or method. It’s helpful during development when you want to focus on particular components.
+- **Purpose:** Runs only a specified test class or method.  
+- **When to Use:** When focusing on or debugging a particular test.
 
 ---
 
